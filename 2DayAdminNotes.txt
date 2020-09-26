@@ -1,0 +1,384 @@
+---------------------------------The Overview Archtecture ---------------------------------------------------------------
+
+[Storage(Database)(Disk) + CPU(Processes) + Memory(RAM{SGA}) ]=Oracle Server
+
+-Storage(Database) = DB files, DB data.
+-[CPU(Processes) + Memory(RAM{SGA})] = Together called as instance(Used to access the Storage.)
+
+Instance  : All Instance details are stored/created/ from Parameter file (ie Pfile., Server(pfile))
+AnY instance is accessed by three components ie
+
+Host,port,SID/ServiceName
+SID/ServiceName : It is a unique name that identifies the instance / database.
+Host 			: It is used to host the instance at some value say (ip address, DNS, localhost etc) 
+Port 			: Now the DB is ready, inorder to connect and recieve connection requests , we need port. 
+				  To listen to port we need listener
+				   
+Pfile(textfile) is imporant -> It is used as source for Spfile(binaryfile)				   
+=================================================================================================================================
+
+----------------------------------Overview of Database Types,Installers,Editions-----------------------------------------
+
+Tools for Administering the Database : 
+■ Oracle Universal Installer 				 : Oracle software Installer.
+■ Oracle Database Configuration Assistant 	 : Database maker(configurator)
+■ Database Upgrade Assistant				 : The Upgrade guide 
+■ Net Configuration Assistant 				 : Net Configuration Assistant (NETCA) is a utility that enables you to configure listeners and naming methods,	
+■ Oracle Enterprise Manager Database Control : Web based interface for Database.
+
+Desktop Class—For Personal laptop/pc or single pc.
+Server Class- For companies, enterprises, such as datacenters.
+ 
+Types of Editions : 
+Enterprise Edition	— full-featured Oracle Database product
+Standard Edition	— small to medium-sized enterprises. 
+Standard One Edition— single-server environments or highly distributed branch environments.
+Personal Edition	- Enterprise Edition, but supports only a single-user
+
+Database File Location  = 
+File System					 — This default option creates database files that are managed by the file system of your operating system. 
+Automatic Storage Management — This option enables you to place your data files in Oracle Automatic Storage Management (Oracle ASM) disk groups.
+							   Oracle ASM uses an Oracle ASM instance, which is distinct from the database instance, to configure and manage disk groups. 
+							   A single Oracle ASM instance can provide storage for multiple databases on the same server. 
+							  
+Database Identifiers 	= global database name and system identifier (SID). 
+=============================================================================================================================
+
+----------------------------------Installation procedure explanation with guidance (DBCA)--------------------------------------------
+
+Installing Oracle Database Software
+Creating and Managing a Database with DBCA(Database Configuration Assistant )
+■ step 1 - Start DBCA
+■ Step 2 - Database Templates ( ■-> General purpose or transaction processing ,■-> Data warehouse)
+■ Step 3 - Database Identification(SID, and GlobalDatabasename)
+■ Step 4 - Management Options (Configure Enterprise Manager, and CentralizedManagement)
+■ Step 5 - Database Credentials(DBA passwords)
+■ Step 6 - Database File Locations(Location for DB to use )
+■ Step 7 - Recovery Configuration (All about recovery)
+■ Step 8 - Database Content(Sample Schemas, custom scripts)
+■ Step 9 - Initialization Parameters(■ Memory ,■ Sizing ,■ Character Sets ,■ Connection Mode)
+■ Step 10 - Database Storage
+■ Step 11 - Creation Options
+
+Changing the Configuration of a Database Using DBCA
+Deleting a Database Using DBCA
+Managing Templates with DBCA
+===========================================================================================================================
+
+-----------------------------------The Admin Part Duties and responsibilities ------------------------------------------
+
+== ■ Database Administration
+@ - Managing Your Database: A Roadmap to managing database instance. 
+---- "Shutting Down and Starting Up the Oracle Instance
+---- "Configuring the Network Environment"
+---- "Managing Database Storage Structures".
+---- "Managing Memory" 
+---- "Administering User Accounts and Security".
+---- "Managing Schema Objects"
+---- "Performing Backup and Recovery".
+---- "Configuring Recovery Settings"
+---- "Monitoring and Tuning the Database"
+---- "Investigating, Reporting, and Resolving Problems"
+---- "Managing Oracle Database Software". 
+
+-starting and stopping the services from DB console : 
+	:	Administerative Tools -> Services.msc -> Oracle-Service -> Start/Stop.
+
+-Oracle Enterprise Manager Database Control
+-Accessing the Database Home Page
+-Database Control Administrative Users
+	: Blackout Periods, 
+-Administering the Database with SQL-Based Management Tools
+=============================================================================================================================
+
+-------------------------------- Complete Listener Detailed Explanation ---------------------------------------------
+
+Configuring the Network Environment : 
+=Oracle Net Listener Configuration 	: 'Listener.ORA File.'
+	■ "Viewing Listener Configuration" 
+	■ "Starting and Stopping the Listener" 
+	■ "About Background Processes"
+@Client-Connections :
+	■ Connect Descriptors
+	■ Connection Requests
+	■ Naming Methods
+
+=Tools for Network Configuration : 
+■ Net Configuration Assistant
+■ Oracle Enterprise Manager
+■ Oracle Net Manager
+
+Viewing Listener Configuration
+Starting and Stopping the Listener
+Connecting to an Oracle Database from a Client Computer
+EXAMPLE : "host[:port][/service_name][:server][/instance_name]"
+
+=======================================================================================================================
+
+-------------------------------- Oracle Instance Detailed Explanation ---------------------------------------------
+
+=An Oracle instance (also known as a database instance) contains the set of Oracle Database background 
+processes that operate on the stored data and the shared allocated memory that those processes use to do their work. 
+
+■ About Initialization Parameters : 
+■ About Background Processes
+■ About Server and Client Processes
+■ About Instance Memory Structure
+■ About Instance Startup and Shutdown
+
+Managing the Oracle Instance :- 
+ 
+■-Initialization Parameters : 
+-Server parameter file  (Spfile)
+-parameter file 		(Pfile)
+
+■-Background Processes 	:
+Database writer (DBWn)  : Buffer Data is written into DB Storage(DataFiles)
+Log writer (LGWR) 		: Writes in Logs in redo Log files.
+Checkpoint (CKPT)		: Checkpoint ensures the syncronozation of Logwriter and DBwriter(Example : Being in Sync of Data and log.)
+System monitor (SMON)	: instance recovery when a failed instance is restarted. 
+Process monitor (PMON)	: performs a recovery when a user process fails
+
+Archiver (ARCn) 					: Archiver processes copy the online redo log files to archival storage.
+Manageability monitor(MMON) 		: performs various management-related background tasks.
+Job Queue Processes (CJQ0 and Jnnn) : Job queue processes run user jobs, often in batch mode.
+
+■About Server and Client Processes :
+Server processes can be either 
+Dedicated 	: dedicated server mode = In dedicated server mode, each client process has its own server process. 
+Shared 		: shared server mode 	= Shared server mode is more efficient at supporting multiple client programs making frequent short-running queries. 
+
+■Instance Memory Structure 		:  sizes of the instance memory structures affect database performance and are controlled by initialization parameters.  
+	■ System Global Area
+	■ Program Global Area
+
+SGA Components : 
+Database buffer cache
+Shared pool
+Redo log buffer
+Large pool
+Java pool
+Streams pool 
+Result cache
+
+A Program Global Area (PGA) is a memory area used by a single Oracle Database
+server process. When you connect to an Oracle database instance, you create a session
+that uses a server process for communication between the client and database instance.
+Each server process has its own PGA.
+
+Credentials for Instance Startup and Shutdown : 
+-SYSDBA for fully empowered database administrators
+-SYSOPER for startup and shutdown only
+
+@database process : The startup process is "Nomount -> Mount -> Open."
+-nomount: The database instance has been started (processes and memory structures have been allocated, but control file is not yet accessed).
+-mount	: Instance has accessed the control file, but has not yet validated its entry or accessed the datafiles.
+-open 	: Instance has validated the entries in the control files and is accessing the datafiles – it is now open for business.
+
+■@Shutting Down and Starting Up the Oracle Instance
+------------------------------------------------------------------------------------------------------------------------------
+@Managing Memory :	
+ASM(automatic shared memory management)	:You specify the target size for instance memory. The database instance automatically tunes to the target memory size, 
+										 redistributing memory as needed between the SGA and the instance PGA.
+AMM(automatic memory management)  		:You specify the target size for instance memory. The database instance automatically tunes to the target memory size, 
+										 redistributing memory as needed between the SGA and the instance PGA. 
+MSM(manual shared memory management) 	:Instead of setting the total memory size, you set many initialization parameters to manage 
+										 components of the SGA and instance PGA individually.
+=======================================================================================================================									 
+
+-----------------------------------------------DataBase Storage Structures Explained------------------------------------ 
+
+@Managing Database Storage Structures :An Oracle database is made up of physical and logical structures. 
+--@--Database Storage Structures : 
+■ About Control Files 			: It is the root file that the database uses to find all the other files used by the database. 
+■ About Online Redo Log Files	: The online redo log stores a copy of the changes made to data. If a failure requires a data file 
+								  to be restored from backup, and recent data changes in Database can be recovered from Redo. (LGWR) writes redo records from the memory buffer to a redo log group
+■ About Archived Redo Log Files : Oracle Database copies the online redo log files to another location
+■ About Rollback Segments 		: Rollback segments were database structures used to track undo information
+■ About Data Files				: Data files are the operating system files that store the data within the database.
+									■ Segment : A segment contains a specific type of database object. 
+									■ Extent  : An extent is a contiguous set of data blocks within a segment
+									■ Data block :  database block, is the smallest unit of I/O to database storage 
+■ About Tablespaces 			: This tablespace contains the sample schemas that are included with Oracle Database.
+								  Default TableSpace : EXAMPLE, SYSTEM, SYSAUX, TEMP, UNDOTBS1, USERS.
+								  TableSpaceCreation parameters : 
+									■ Locally Managed Tablespaces : Locally managed tablespaces keep the space allocation information 
+									■ Tablespace Types 			  : Permanent, undo, temporary.
+ 									■ Tablespace Status			  : Read Write, Read Only, Offline.
+									■ Autoextend Tablespace 	  : You can set a tablespace to automatically extend itself by a specified amount when it reaches its size limit
+									■ Encrypted Tablespaces		  : Encrypted tablespaces primarily protect your data from unauthorized access.
+■ About Other Storage Structures: Initialization Parameter File,
+								  Password File,
+								  Backup Files
+------------------------------------------------------------------------------------------------------------------------------								  
+--@--Viewing Database Storage Structure Information : 
+■ Viewing Control File Information
+■ Viewing Online Redo Log File Information
+■ Viewing Archived Redo Log File Information
+■ Viewing Data File Information
+■ Viewing Tablespace Information
+------------------------------------------------------------------------------------------------------------------------------
+--@--Performing Common Database Storage Tasks(can be performed using DBCA)
+■ Creating a Tablespace
+■ Modifying a Tablespace
+	-Setting a Tablespace to Automatically Extend
+	-Changing Space Usage Alert Thresholds for a Tablespace
+	-Taking a Tablespace Offline
+■ Dropping a Tablespace
+■ Reclaiming Unused Space
+	■ About Reclaimable Unused Space
+	■ About the Segment Advisor
+	■ Viewing Segment Advisor Recommendations and Reclaiming Space
+	■ Running the Segment Advisor Manually
+------------------------------------------------------------------------------------------------------------------------------
+--@--Managing the Online Redo Log (The online redo log files are a critical component in database recovery. )
+■ Multiplexing the Online Redo Log
+■ Switching a Log File
+------------------------------------------------------------------------------------------------------------------------------
+--@--Managing Undo Data 
+■ About Undo Data
+■ About Managing Undo Data
+■ Viewing Undo Information
+■ Computing the Minimum Undo Tablespace Size Using the Undo Advisor
+■ Changing the Undo Tablespace to a Fixed Size
+------------------------------------------------------------------------------------------------------------------------------
+==================================================================================================================================
+
+------------------------------------------Administering User Accounts and Security---------------------------------------
+■ About User Accounts : 
+
+■ About User Privileges and Roles
+	System privileges
+	Object privileges
+	Oracle Database Predefined Roles : CONNECT,RESOURCE,DBA.
+■ About Administrative Accounts and Privileges
+	■ SYS and SYSTEM Users 				   : The SYS user is granted the SYSDBA privilege, which enables a user to perform
+											 high-level administrative tasks such as backup and recovery and upgrade.
+	■ SYSDBA and SYSOPER System Privileges : SYSDBA and SYSOPER are administrative privileges required to perform high-level
+											 administrative operations such as creating, starting up, shutting down, backing up, or recovering the database. 
+■ Administering Roles 					   : example of create,modify,delete role
+■ Administering Database User Accounts	   :
+			■ Viewing User Accounts
+			■ Example: Creating a User Account
+			■ Creating a New User Account by Duplicating an Existing User Account
+			■ Example: Granting Privileges and Roles to a User Account
+			■ Example: Assigning a Tablespace Quota to a User Account
+			■ Example: Modifying a User Account
+			■ Locking and Unlocking User Accounts
+			■ Expiring a User Password
+			■ Example: Deleting a User Account
+■ Setting the Database Password Policy 		:
+			■ About Password Policies
+			■ Modifying the Default Password Policy
+■ Users: Oracle By Example Series
+------------------------------------------------------------------------------------------------------------------------------
+==================================================================================================================================
+
+----------------------------------------------Managing Schema Objects---------------------------------------------------
+■ About Schema Objects : 
+	Naming Schema Objects
+	The Show SQL Button
+■ About Schema Object Management Privileges
+	: As a database administrator (DBA), you can create, modify, and delete schema objects in your own schema and in any other schema.
+■ Managing Tables : 
+	■ About Tables = 
+		■ About Table Types 				:  Relational table :  common type of table in an Oracle database is a relational table  
+											   object tables , 
+											   XMLType tables.
+											   ------------------------------------------------------------------------------------------------------------------------------
+		■ About Table Column Attributes 	:  Data Type : VARCHAR2, NUMBER, DATE, CLOB. 
+											   NOT NULL Column Constraint 
+											   Default Value :   A default value as a literal or as an expression that is automatically stored in the column whenever a new row is 
+																 inserted without a value being provided for the column.
+											   Encryption.  
+											   ------------------------------------------------------------------------------------------------------------------------------
+		■ About Table-Level Constraints		:  Primarykey 	:—Requires that a column (or combination of columns) be the unique
+															  identifier of the row. A primary key column does not allow NULL values.
+											   Uniquekey 	:-Requires that no two rows can have duplicate values in a specified
+															  column or combination of columns
+											   ForeignKey	:-Requires that for a particular column (or combination of columns),
+															  all column values in the child table exist in the parent table. 
+											   check 		:-Requires that a column (or combination of columns) satisfy a condition
+															  for every row in the table. 
+												------------------------------------------------------------------------------------------------------------------------------			  
+		■ Other Table Creation Consideration:  User-Defined Types 	: User-defined types enable a single column in a single row to contain multiple values. 
+											   Large Objects (LOBs)	: Large object (LOB) columns are used to contain unstructured data 
+											   Partitioned Tables and Indexes : You can partition tables and indexes. Partitioning helps to
+																				support very large tables and indexes by enabling you to divide the 
+																				tables and indexes into smaller and more manageable pieces called partitions. 
+											   Physical Storage Attributes 	  :  
+											   Compressed Tables : Table Compression is suitable for both OLTP applications and data
+																   warehousing applications. Compressed tables require less disk storage and result in 
+																   improved query performance due to reduced I/O and buffer cache requirements. 
+												------------------------------------------------------------------------------------------------------------------------------														
+	■ Viewing Tables 
+	■ Viewing Table Data
+	■ Example: Creating a Table
+	■ Modifying Table Attributes : --------
+											■ Example: Adding Table Columns
+											■ Example: Deleting a Table Column
+											■ Example: Adding a New Table Constraint
+											■ Example: Modifying an Existing Table Constraint
+											■ Example: Deleting a Table Constraint
+										
+	■ Example: Loading Data into a Table 	: use Database Control to load data into a table.
+	■ Deleting a Table
+----------------------------------------------------	
+■ Managing Indexes : 
+						■ About Indexes 		:  Oracle Database index provides quick access to table data.
+												Index-Attributes : 
+																  -Standard (B-tree) and Bitmap
+																  -Ascending and Descending
+																  -Column and Functional
+																  -Single-Column and Concatenated
+																  -Nonpartitioned and Partitioned
+						■ Viewing Indexes
+						■ Example: Creating an Index
+						■ Example: Deleting an Index
+------------------------------------------------------
+■ Managing Views : 
+						■ About Views : Views are customized presentations of data in one or more tables or other views. You can think of them as stored queries. 
+										Dynamic Performance Views.
+						■ Displaying Views
+						■ Example: Creating a View
+						■ Example: Deleting a View
+■ Managing Program Code Stored in the Database : 
+													■ About Program Code Stored in the Database
+													■ Validating (Compiling) Invalid Schema Objects
+■ Working with Other Schema Objects : 
+										■ Sequences
+										■ Synonyms
+										■ Database links
+■ Schemas: Oracle By Example Series
+----------------------------------------------------------------------------------------------------------------------------
+==================================================================================================================================
+---------------------------------------------------- Performing Backup and Recovery ----------------------------------------
+■ Overview of Database Backup and Recovery 	:
+										    ■ Oracle Flashback Table, which enables you to revert a table to its contents at a time in the recent past 
+											■ Oracle Flashback Drop, which enables you to retrieve deleted (dropped) database tables
+											■ Oracle Flashback Database, which enables you to revert the entire database to a past point in time
+■ Database Backup and Recovery Concepts 	:	 
+											Consistent and Inconsistent Backups
+											Media Recovery
+											Fast Recovery Area
+											RMAN Repository
+■ Configuring Your Database for Basic Backup and Recovery : 
+				■ Specifying Credentials for Backup and Recovery Using Database Control
+				■ Planning Space Usage and Location for the Fast Recovery Area : 
+							About the Backup Retention Policy and the Fast Recovery Area.
+							About the Fast Recovery Area Size.
+				■ Configuring Recovery Settings : 
+							About the Backup Retention Policy and the Fast Recovery Area.
+				■ Monitoring Fast Recovery Area Usage
+				■ Configuring Backup Settings : 
+							About RMAN Backups
+							Configuring Backup Device Settings
+							Configuring Backup Policy Settings
+				
+■ Backing Up Your Database
+■ Displaying Backup Reports
+■ Managing Backups
+■ Performing Oracle Advised Recovery
+■ Performing User-Directed Recovery
+■ Backup and Recovery: Oracle By Example Series
+
